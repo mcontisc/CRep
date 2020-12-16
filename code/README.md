@@ -3,9 +3,9 @@ Copyright (c) 2020 [Hadiseh Safdari](https://github.com/hds-safdari), [Martina C
 
 Implements the algorithm described in:
 
-[1] Safdari H., Contisciani M. & De Bacco C. (2020). *A generative model for reciprocity in networks*, <span style="color:red"> arxiv link.  
+[1] Safdari H., Contisciani M. & De Bacco C. (2020). *A generative model for reciprocity and community detection in networks*, arXiv:2012.08215. 
 
-If you use this code please cite this [article] <span style="color:red"> arxiv link. </span> (_preprint_).  
+If you use this code please cite this [article] (https://arxiv.org/abs/2012.08215) (_preprint_).  
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

@@ -1,7 +1,7 @@
-# CRep reciprocity in networks
+# CRep reciprocity and community detection in networks
 Python implementation of CRep algorithm described in:
 
-- [1] Safdari H., Contisciani M. & De Bacco C. (2020). *A generative model for reciprocity in networks*, arXiv:2012.08215.  
+- [1] Safdari H., Contisciani M. & De Bacco C. (2020). *A generative model for reciprocity and community detection in networks*, arXiv:2012.08215.  
 
 This is a new probabilistic generative model and efficient algorithm to model reciprocity in directed networks. It assigns latent variables as community memberships to nodes and a reciprocity parameter to the whole network and it formalizes the assumption that a directed interaction is more likely to occur if an individual has already observed an interaction towards her. <br>
 

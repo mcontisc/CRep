@@ -386,9 +386,6 @@ class GM_reciprocity:
                         G.add_edge(i, j, weight=A1)
                 totM += A0 + A1
 
-        nodes = list(G.nodes())
-        A = nx.to_scipy_sparse_matrix(G, nodelist=nodes, weight='weight')
-
         # keep largest connected component
         Gc = max(nx.weakly_connected_components(G), key=len)
         nodes_to_remove = set(G.nodes()).difference(Gc)
@@ -396,6 +393,8 @@ class GM_reciprocity:
 
         nodes = list(G.nodes())
         self.N = len(nodes)
+
+        A = nx.to_scipy_sparse_matrix(G, nodelist=nodes, weight='weight')
 
         Sparsity_cof = np.round(2 * G.number_of_edges() / float(G.number_of_nodes()), 3)
 
