@@ -47,7 +47,7 @@ def import_data(dataset, ego='source', alter='target', force_dense=True, header=
 
     nodes = list(A[0].nodes())
 
-    # save the network in a numpy tensor
+    # save the network in a tensor
     if force_dense:
         B, rw = build_B_from_A(A, nodes=nodes)
         B_T, data_T_vals = None, None

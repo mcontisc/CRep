@@ -69,8 +69,8 @@ class CRep:
         self.eta_old = 0.  # reciprocity coefficient
 
         # final values after convergence --> the ones that maximize the pseudo log-likelihood
-        self.u_f = np.zeros((self.N, self.K), dtype=float)  # Out-going membership
-        self.v_f = np.zeros((self.N, self.K), dtype=float)  # In-going membership
+        self.u_f = np.zeros((self.N, self.K), dtype=float)  # out-going membership
+        self.v_f = np.zeros((self.N, self.K), dtype=float)  # in-going membership
         self.eta_f = 0.  # reciprocity coefficient
 
         # values of the affinity tensor
@@ -187,7 +187,7 @@ class CRep:
 
     def _initialize(self, rng=None):
         """
-            Random initialization of the parameters u, v, w, beta.
+            Random initialization of the parameters u, v, w, eta.
 
             Parameters
             ----------
