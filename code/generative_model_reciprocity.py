@@ -279,7 +279,9 @@ class GM_reciprocity:
         rw = (M0 * M0t).sum() / M0.sum()  # expected reciprocity
 
         c = self.ExpM / float(M0.sum())  # constant to enforce sparsity
-
+        if parameters is None:
+            self.w *= c  # only w is impact by that, u and v have a constraint, their sum over k should sum to 1
+        
         '''
         Generate network G (and adjacency matrix A) using the latent variable,
         with the generative model (A_ij) ~ P(A_ij|u,v,w) 
