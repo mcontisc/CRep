@@ -7,7 +7,7 @@ This is a new probabilistic generative model and efficient algorithm to model re
 
 If you use this code please cite [1].   
 
-The paper can be found [here](https://journals.aps.org/prresearch/abstract/10.1103/PhysRevResearch.3.023209) (Published version, open access) or [here](https://arxiv.org/abs/2012.08215) (_preprint_).  
+The paper can be found [here](https://journals.aps.org/prresearch/abstract/10.1103/PhysRevResearch.3.023209) (_Published version, open access_) or [here](https://arxiv.org/abs/2012.08215) (_preprint_).  
 
 Copyright (c) 2020 [Hadiseh Safdari](https://github.com/hds-safdari), [Martina Contisciani](https://www.is.mpg.de/person/mcontisciani) and [Caterina De Bacco](http://cdebacco.com).
 
