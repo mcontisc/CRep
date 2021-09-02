@@ -108,6 +108,7 @@ def read_graph(df_adj, ego='source', alter='target', noselfloop=True):
 
     # remove self-loops
     if noselfloop:
+        print('Removing self loops')
         for l in range(L):
             A[l].remove_edges_from(list(nx.selfloop_edges(A[l])))
 

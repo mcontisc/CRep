@@ -168,8 +168,6 @@ class GM_reciprocity:
                 counter += 1
                 totM += A_ij + A_ji
 
-        nodes = list(G.nodes())
-
         # keep largest connected component
         Gc = max(nx.weakly_connected_components(G), key=len)
         nodes_to_remove = set(G.nodes()).difference(Gc)
