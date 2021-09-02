@@ -54,6 +54,7 @@ It will use the sample network contained in `./data/input`. The adjacency matrix
 - **-e** : Name of the source of the edge, *(default='source')*.
 - **-t** : Name of the target of the edge, *(default='target')*.
 - **-d** : Flag to force a dense transformation of the adjacency matrix, *(default=False)*.
+- **-F** : Flag to choose the convergence method, *(default='log')*.
 
 You can find a list by running (inside `code` directory): 
 
