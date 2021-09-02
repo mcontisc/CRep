@@ -22,6 +22,7 @@ def main():
     p.add_argument('-e', '--ego', type=str, default='source')  # name of the source of the edge
     p.add_argument('-t', '--alter', type=str, default='target')  # name of the target of the edge
     p.add_argument('-d', '--force_dense', type=bool, default=False)  # flag to force a dense transformation in input
+    p.add_argument('-F', '--flag_conv', type=str, choices=['log', 'deltas'], default='log')  # flag for convergence
     args = p.parse_args()
 
     # setting to run the algorithm
@@ -46,7 +47,7 @@ def main():
 
     time_start = time.time()
     model = CREP.CRep(N=A[0].number_of_nodes(), L=len(A), K=args.K, **conf)
-    _ = model.fit(data=B, data_T=B_T, data_T_vals=data_T_vals, nodes=nodes)
+    _ = model.fit(data=B, data_T=B_T, data_T_vals=data_T_vals, flag_conv=args.flag_conv, nodes=nodes)
 
     print(f'\nTime elapsed: {np.round(time.time() - time_start, 2)} seconds.')
 

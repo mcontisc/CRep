@@ -241,7 +241,7 @@ def extract_mask_kfold(indices, N, fold=0, NFold=5):
     return mask
 
 
-def fit_model(B, B_T, data_T_vals, nodes, N, L, algo, K, **conf):
+def fit_model(B, B_T, data_T_vals, nodes, N, L, algo, K, flag_conv, **conf):
     """
         Model directed networks by using a probabilistic generative model that assume community parameters and
         reciprocity coefficient. The inference is performed via EM algorithm.
@@ -264,6 +264,10 @@ def fit_model(B, B_T, data_T_vals, nodes, N, L, algo, K, **conf):
                Configuration to use (CRep, CRepnc, CRep0).
         K : int
             Number of communities.
+        flag_conv : str
+                    If 'log' the convergence is based on the log-likelihood values; if 'deltas' the convergence is
+                    based on the differences in the parameters values. The latter is suggested when the dataset
+                    is big (N > 1000 ca.).
 
         Returns
         -------
@@ -286,7 +290,7 @@ def fit_model(B, B_T, data_T_vals, nodes, N, L, algo, K, **conf):
         yaml.dump(conf, f)
 
     mod = CREP.CRep(N=N, L=L, K=K, **conf)
-    uf, vf, wf, nuf, maxPSL = mod.fit(data=B, data_T=B_T, data_T_vals=data_T_vals, nodes=nodes)
+    uf, vf, wf, nuf, maxPSL = mod.fit(data=B, data_T=B_T, data_T_vals=data_T_vals, flag_conv=flag_conv, nodes=nodes)
 
     return uf, vf, wf, nuf, maxPSL, mod
 

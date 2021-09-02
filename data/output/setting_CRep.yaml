@@ -6,9 +6,7 @@ end_file: _CRep
 err: 0.1
 err_max: 1.0e-12
 eta0: null
-file_u: ../data/input/file_u.csv
-file_v: ../data/input/file_v.csv
-file_w: ../data/input/file_w.csv
+files: ../data/input/synthetic/theta.npz
 fix_eta: false
 inf: 10000000000.0
 initialization: 0

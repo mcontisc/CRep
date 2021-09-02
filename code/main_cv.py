@@ -28,7 +28,8 @@ def main():
     p.add_argument('-e', '--ego', type=str, default='source')  # name of the source of the edge
     p.add_argument('-t', '--alter', type=str, default='target')  # name of the target of the edge
     # p.add_argument('-d', '--force_dense', type=bool, default=True)  # flag to force a dense transformation in input
-    p.add_argument('-F', '--NFold', type=int, default=5)  # number of fold to perform cross-validation
+    p.add_argument('-F', '--flag_conv', type=str, choices=['log', 'deltas'], default='log')  # flag for convergence
+    p.add_argument('-N', '--NFold', type=int, default=5)  # number of fold to perform cross-validation
     p.add_argument('-m', '--out_mask', type=bool, default=False)  # flag to output the masks
     p.add_argument('-r', '--out_results', type=bool, default=True)  # flag to output the results in a csv file
     p.add_argument('-i', '--out_inference', type=bool, default=True)  # flag to output the inferred parameters
@@ -116,7 +117,7 @@ def main():
         tic = time.time()
         conf['end_file'] = init_end_file + '_' + str(fold) + 'K' + str(K)
         u, v, w, eta, maxPSL, algo_obj = cvfun.fit_model(B_train, B_T, data_T_vals, nodes=nodes, N=N, L=L, K=K,
-                                                         algo=algorithm, **conf)
+                                                         algo=algorithm, flag_conv=args.flag_conv, **conf)
 
         '''
         Output performance results

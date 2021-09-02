@@ -18,6 +18,7 @@ class Test(unittest.TestCase):
     ego = 'source'
     alter = 'target'
     # force_dense = True
+    flag_conv = 'log'
     NFold = 5
     out_mask = False
     out_results = True
@@ -60,7 +61,8 @@ class Test(unittest.TestCase):
 
             self.conf['end_file'] = '_' + str(fold) + 'K' + str(self.K) + self.end_file
             u, v, w, eta, maxPSL, algo_obj = cvfun.fit_model(B_train, self.B_T, self.data_T_vals, nodes=self.nodes,
-                                                             N=N, L=L, K=self.K, algo=self.algorithm, **self.conf)
+                                                             N=N, L=L, K=self.K, algo=self.algorithm,
+                                                             flag_conv=self.flag_conv, **self.conf)
 
             '''
             Load parameters

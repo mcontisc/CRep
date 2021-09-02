@@ -18,6 +18,7 @@ class Test(unittest.TestCase):
     ego = 'source'
     alter = 'target'
     force_dense = False
+    flag_conv = 'log'
 
     '''
     Import data
@@ -49,7 +50,8 @@ class Test(unittest.TestCase):
     def test_running_algorithm(self):
         print("\nStart running algorithm test\n")
 
-        _ = self.model.fit(data=self.B, data_T=self.B_T, data_T_vals=self.data_T_vals, nodes=self.nodes)
+        _ = self.model.fit(data=self.B, data_T=self.B_T, data_T_vals=self.data_T_vals, flag_conv=self.flag_conv,
+                           nodes=self.nodes)
 
         theta = np.load(self.model.out_folder+'theta'+self.model.end_file+'.npz')
         thetaGT = np.load(self.model.out_folder+'theta_'+self.algorithm+'.npz')
