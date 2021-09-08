@@ -16,4 +16,4 @@ assortative: True
 eta0: null
 fix_eta: False
 constrained: True
-files: '../data/input/synthetic/theta.npz'
+files: '../data/input/theta_gt111.npz'

@@ -267,23 +267,23 @@ class CRep:
             if self.verbose:
                 print(f'w is initialized using the input file: {self.files}.')
                 print('u and v are initialized randomly.')
-            self._initialize_w()
+            self._initialize_w(rng)
             self._randomize_u_v(rng=rng)
 
         elif self.initialization == 2:
             if self.verbose:
                 print(f'u and v are initialized using the input file: {self.files}.')
                 print('w is initialized randomly.')
-            self._initialize_u(nodes)
-            self._initialize_v(nodes)
+            self._initialize_u(rng, nodes)
+            self._initialize_v(rng, nodes)
             self._randomize_w(rng=rng)
 
         elif self.initialization == 3:
             if self.verbose:
                 print(f'u, v and w are initialized using the input file: {self.files}.')
-            self._initialize_u(nodes)
-            self._initialize_v(nodes)
-            self._initialize_w()
+            self._initialize_u(rng, nodes)
+            self._initialize_v(rng, nodes)
+            self._initialize_w(rng)
 
     def _randomize_eta(self, rng=None):
         """
@@ -345,12 +345,14 @@ class CRep:
         else:
             self.v = self.u
 
-    def _initialize_u(self, nodes):
+    def _initialize_u(self, rng, nodes):
         """
             Initialize out-going membership matrix u from file.
 
             Parameters
             ----------
+            rng : RandomState
+                  Container for the Mersenne Twister pseudo-random number generator.
             nodes : list
                     List of nodes IDs.
         """
@@ -359,14 +361,16 @@ class CRep:
         assert np.array_equal(nodes, self.theta['nodes'])
 
         max_entry = np.max(self.u)
-        self.u += max_entry * self.err * np.random.random_sample(self.u.shape)
+        self.u += max_entry * self.err * rng.random_sample(self.u.shape)
 
-    def _initialize_v(self, nodes):
+    def _initialize_v(self, rng, nodes):
         """
             Initialize in-coming membership matrix v from file.
 
             Parameters
             ----------
+            rng : RandomState
+                  Container for the Mersenne Twister pseudo-random number generator.
             nodes : list
                     List of nodes IDs.
         """
@@ -378,22 +382,26 @@ class CRep:
             assert np.array_equal(nodes, self.theta['nodes'])
 
             max_entry = np.max(self.v)
-            self.v += max_entry * self.err * np.random.random_sample(self.v.shape)
+            self.v += max_entry * self.err * rng.random_sample(self.v.shape)
 
-    def _initialize_w(self):
+    def _initialize_w(self, rng):
         """
             Initialize affinity tensor w from file.
+
+            Parameters
+            ----------
+            rng : RandomState
+                  Container for the Mersenne Twister pseudo-random number generator.
         """
 
         if self.assortative:
-            self.w = np.zeros((self.L, self.K))
-            for l in range(self.L):
-                self.w[l] = np.diag(self.w[l])[np.newaxis, :].copy()
+            self.w = self.theta['w']
+            assert self.w.shape == (self.L, self.K)
         else:
             self.w = self.theta['w']
 
         max_entry = np.max(self.w)
-        self.w += max_entry * self.err * np.random.random_sample(self.w.shape)
+        self.w += max_entry * self.err * rng.random_sample(self.w.shape)
 
     def _update_old_variables(self):
         """

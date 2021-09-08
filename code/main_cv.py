@@ -6,6 +6,8 @@
     - Calculate performance measures in the test set (AUC).
 """
 
+# TODO: optimize for big matrices (so when the input would be done with force_dense=False)
+
 import csv
 import os
 import pickle
@@ -34,8 +36,6 @@ def main():
     p.add_argument('-r', '--out_results', type=bool, default=True)  # flag to output the results in a csv file
     p.add_argument('-i', '--out_inference', type=bool, default=True)  # flag to output the inferred parameters
     args = p.parse_args()
-
-    # TODO: optimize when force_dense=False
 
     prng = np.random.RandomState(seed=17)  # set seed random number generator
 

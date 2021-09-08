@@ -33,7 +33,9 @@ def main():
     with open(conf['out_folder'] + '/setting_' + args.algorithm + '.yaml', 'w') as f:
         yaml.dump(conf, f)
 
-    # import data
+    '''
+    Import data
+    '''
     network = args.in_folder + args.adj  # network complete path
     A, B, B_T, data_T_vals = tl.import_data(network, ego=args.ego, alter=args.alter,
                                             force_dense=args.force_dense, header=0)
@@ -42,7 +44,9 @@ def main():
     valid_types = [np.ndarray, skt.dtensor, skt.sptensor]
     assert any(isinstance(B, vt) for vt in valid_types)
 
-    # run CRep
+    '''
+    Run CRep    
+    '''
     print(f'\n### Run {args.algorithm} ###')
 
     time_start = time.time()

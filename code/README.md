@@ -26,8 +26,8 @@ THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - `test_cv.py` : Code for testing the cross-validation procedure.
 - `setting_syn_data.yaml` : Setting to generate synthetic data (input for *generate_data.py*).
 - `setting_CRep.yaml` : Setting to run the algorithm CRep (input for *main.py* and *main\_cv.py*).
-- `setting_CRepnc.yaml` : Setting to run the algorithm CRep without normalization constraints on the membership parameters (input for *main.py* and *main\_cv.py*.
-- `setting_CRep.yaml` : Setting to run the algorithm CRep without considering  the reciprocity effect (input for *main.py* and *main\_cv.py*.
+- `setting_CRepnc.yaml` : Setting to run the algorithm CRep without normalization constraints on the membership parameters (input for *main.py* and *main\_cv.py*).
+- `setting_CRep0.yaml` : Setting to run the algorithm CRep without considering  the reciprocity effect (input for *main.py* and *main\_cv.py*).
 - `analyse_results.ipynb` : Example jupyter notebook to import the output results.
 
 ## Usage
@@ -47,6 +47,7 @@ It will use the sample network contained in `./data/input`. The adjacency matrix
 - **-e** : Name of the source of the edge, *(default='source')*.
 - **-t** : Name of the target of the edge, *(default='target')*.
 - **-d** : Flag to force a dense transformation of the adjacency matrix, *(default=False)*.
+- **-F** : Flag to choose the convergence method, *(default='log')*.
 
 You can find a list by running (inside `code` directory): 
 
