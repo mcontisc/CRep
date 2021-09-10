@@ -2,7 +2,7 @@ N_real: 5
 assortative: true
 constrained: true
 decision: 10
-end_file: _CRep_4K3
+end_file: _4K3_test
 err: 0.1
 err_max: 1.0e-12
 eta0: null
