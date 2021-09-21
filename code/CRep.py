@@ -211,7 +211,7 @@ class CRep:
                     self.final_it = it
                     conv = convergence
             elif flag_conv == 'deltas':
-                loglik = self._PSLikelihood(data, self.eta, data_T=data_T, mask=mask)
+                loglik = self._PSLikelihood(data, data_T=data_T, mask=mask)
                 if maxL < loglik:
                     self._update_optimal_parameters()
                     maxL = loglik
@@ -771,7 +771,7 @@ class CRep:
 
         if it % 10 == 0:
             old_L = loglik
-            loglik = self._PSLikelihood(data, self.eta, data_T=data_T, mask=mask)
+            loglik = self._PSLikelihood(data, data_T=data_T, mask=mask)
             if abs(loglik - old_L) < self.tolerance:
                 coincide += 1
             else:
