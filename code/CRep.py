@@ -8,7 +8,6 @@ import time
 import sys
 import sktensor as skt
 import numpy as np
-import pandas as pd
 from termcolor import colored
 
 
@@ -170,7 +169,7 @@ class CRep:
 
         for r in range(self.N_real):
 
-            self._initialize(rng=np.random.RandomState(self.rseed), nodes=nodes)
+            self._initialize(rng=rng, nodes=nodes)
 
             self._update_old_variables()
             self._update_cache(data, data_T_vals, subs_nz)
@@ -184,7 +183,7 @@ class CRep:
                 print(f'Updating realization {r} ...')
             time_start = time.time()
             # --- single step iteration update ---
-            while not convergence and it < self.max_iter:
+            while np.logical_and(not convergence, it < self.max_iter):
                 # main EM update: updates memberships and calculates max difference new vs old
                 delta_u, delta_v, delta_w, delta_eta = self._update_em(data, data_T_vals, subs_nz, denominator=E)
                 if flag_conv == 'log':
@@ -212,7 +211,7 @@ class CRep:
                     self.final_it = it
                     conv = convergence
             elif flag_conv == 'deltas':
-                loglik = self.__PSLikelihood(data, self.eta, data_T=data_T, mask=mask)
+                loglik = self._PSLikelihood(data, self.eta, data_T=data_T, mask=mask)
                 if maxL < loglik:
                     self._update_optimal_parameters()
                     maxL = loglik
@@ -222,13 +221,15 @@ class CRep:
                 print(f'Nreal = {r} - Pseudo Log-likelihood = {loglik} - iterations = {it} - '
                       f'time = {np.round(time.time() - time_start, 2)} seconds\n')
 
-        self.rseed += rng.randint(100000000)
-        # end cycle over realizations
+            # end cycle over realizations
 
         self.maxPSL = maxL
-        if self.final_it == self.max_iter and not conv:
+        if np.logical_and(self.final_it == self.max_iter, not conv):
             # convergence not reaches
-            print(colored('Solution failed to converge in {0} EM steps!\n'.format(self.max_iter), 'blue'))
+            try:
+                print(colored('Solution failed to converge in {0} EM steps!'.format(self.max_iter), 'blue'))
+            except:
+                print('Solution failed to converge in {0} EM steps!'.format(self.max_iter))
 
         if self.out_inference:
             self.output_results(nodes)
@@ -285,7 +286,7 @@ class CRep:
             self._initialize_v(rng, nodes)
             self._initialize_w(rng)
 
-    def _randomize_eta(self, rng=None):
+    def _randomize_eta(self, rng):
         """
             Generate a random number in (0, 1.).
 
@@ -322,7 +323,7 @@ class CRep:
                         else:
                             self.w[i, k, q] = self.w[i, q, k] = self.err * rng.random_sample(1)
 
-    def _randomize_u_v(self, rng=None):
+    def _randomize_u_v(self, rng):
         """
             Assign a random number in (0, 1.) to each entry of the membership matrices u and v, and normalize each row.
 
@@ -427,15 +428,16 @@ class CRep:
                       Indices of elements of data that are non-zero.
         """
 
-        self.lambda0_nz = self._lambda0_nz(subs_nz, self.u, self.v, self.w)
+        self.lambda0_nz = self._lambda0_nz(subs_nz)
         self.M_nz = self.lambda0_nz + self.eta * data_T_vals
         self.M_nz[self.M_nz == 0] = 1
         if isinstance(data, skt.dtensor):
             self.data_M_nz = data[subs_nz] / self.M_nz
         elif isinstance(data, skt.sptensor):
             self.data_M_nz = data.vals / self.M_nz
+        self.data_M_nz[self.M_nz == 0] = 0
 
-    def _lambda0_nz(self, subs_nz, u, v, w):
+    def _lambda0_nz(self, subs_nz):
         """
             Compute the mean lambda0_ij for only non-zero entries.
 
@@ -443,12 +445,6 @@ class CRep:
             ----------
             subs_nz : tuple
                       Indices of elements of data that are non-zero.
-            u : ndarray
-                Out-going membership matrix.
-            v : ndarray
-                In-coming membership matrix.
-            w : ndarray
-                Affinity tensor.
 
             Returns
             -------
@@ -457,10 +453,10 @@ class CRep:
         """
 
         if not self.assortative:
-            nz_recon_IQ = np.einsum('Ik,Ikq->Iq', u[subs_nz[1], :], w[subs_nz[0], :, :])
+            nz_recon_IQ = np.einsum('Ik,Ikq->Iq', self.u[subs_nz[1], :], self.w[subs_nz[0], :, :])
         else:
-            nz_recon_IQ = np.einsum('Ik,Ik->Ik', u[subs_nz[1], :], w[subs_nz[0], :])
-        nz_recon_I = np.einsum('Iq,Iq->I', nz_recon_IQ, v[subs_nz[2], :])
+            nz_recon_IQ = np.einsum('Ik,Ik->Ik', self.u[subs_nz[1], :], self.w[subs_nz[0], :])
+        nz_recon_I = np.einsum('Iq,Iq->I', nz_recon_IQ, self.v[subs_nz[2], :])
 
         return nz_recon_I
 
@@ -572,7 +568,7 @@ class CRep:
                      Maximum distance between the old and the new membership matrix u.
         """
 
-        self.u = self.u_old * self._update_membership(subs_nz, self.u, self.v, self.w, 1)
+        self.u = self.u_old * self._update_membership(subs_nz, 1)
 
         if not self.constrained:
             Du = np.einsum('iq->q', self.v)
@@ -616,7 +612,7 @@ class CRep:
                      Maximum distance between the old and the new membership matrix v.
         """
 
-        self.v *= self._update_membership(subs_nz, self.u, self.v, self.w, 2)
+        self.v *= self._update_membership(subs_nz, 2)
 
         if not self.constrained:
             Dv = np.einsum('iq->q', self.u)
@@ -656,13 +652,13 @@ class CRep:
                      Maximum distance between the old and the new affinity tensor w.
         """
 
-        sub_w_nz = self.w.nonzero()
         uttkrp_DKQ = np.zeros_like(self.w)
 
         UV = np.einsum('Ik,Iq->Ikq', self.u[subs_nz[1], :], self.v[subs_nz[2], :])
         uttkrp_I = self.data_M_nz[:, np.newaxis, np.newaxis] * UV
-        for a, k, q in zip(*sub_w_nz):
-            uttkrp_DKQ[:, k, q] += np.bincount(subs_nz[0], weights=uttkrp_I[:, k, q], minlength=self.L)
+        for k in range(self.K):
+            for q in range(self.K):
+                uttkrp_DKQ[:, k, q] += np.bincount(subs_nz[0], weights=uttkrp_I[:, k, q], minlength=self.L)
 
         self.w *= uttkrp_DKQ
 
@@ -714,7 +710,7 @@ class CRep:
 
         return dist_w
 
-    def _update_membership(self, subs_nz, u, v, w, m):
+    def _update_membership(self, subs_nz, m):
         """
             Return the Khatri-Rao product (sparse version) used in the update of the membership matrices.
 
@@ -722,12 +718,6 @@ class CRep:
             ----------
             subs_nz : tuple
                       Indices of elements of data that are non-zero.
-            u : ndarray
-                Out-going membership matrix.
-            v : ndarray
-                In-coming membership matrix.
-            w : ndarray
-                Affinity tensor.
             m : int
                 Mode in which the Khatri-Rao product of the membership matrix is multiplied with the tensor: if 1 it
                 works with the matrix u; if 2 it works with v.
@@ -740,9 +730,9 @@ class CRep:
         """
 
         if not self.assortative:
-            uttkrp_DK = sp_uttkrp(self.data_M_nz, subs_nz, m, u, v, w)
+            uttkrp_DK = sp_uttkrp(self.data_M_nz, subs_nz, m, self.u, self.v, self.w)
         else:
-            uttkrp_DK = sp_uttkrp_assortative(self.data_M_nz, subs_nz, m, u, v, w)
+            uttkrp_DK = sp_uttkrp_assortative(self.data_M_nz, subs_nz, m, self.u, self.v, self.w)
 
         return uttkrp_DK
 
@@ -781,7 +771,7 @@ class CRep:
 
         if it % 10 == 0:
             old_L = loglik
-            loglik = self.__PSLikelihood(data, self.eta, data_T=data_T, mask=mask)
+            loglik = self._PSLikelihood(data, self.eta, data_T=data_T, mask=mask)
             if abs(loglik - old_L) < self.tolerance:
                 coincide += 1
             else:
@@ -833,7 +823,7 @@ class CRep:
 
         return it, coincide, convergence
 
-    def __PSLikelihood(self, data, eta, data_T, mask=None):
+    def _PSLikelihood(self, data, data_T, mask=None):
         """
             Compute the pseudo log-likelihood of the data.
 
@@ -857,14 +847,14 @@ class CRep:
         if mask is not None:
             sub_mask_nz = mask.nonzero()
             if isinstance(data, skt.dtensor):
-                l = -self.lambda0_ija[sub_mask_nz].sum() - eta * data_T[sub_mask_nz].sum()
+                l = -self.lambda0_ija[sub_mask_nz].sum() - self.eta * data_T[sub_mask_nz].sum()
             elif isinstance(data, skt.sptensor):
-                l = -self.lambda0_ija[sub_mask_nz].sum() - eta * data_T.toarray()[sub_mask_nz].sum()
+                l = -self.lambda0_ija[sub_mask_nz].sum() - self.eta * data_T.toarray()[sub_mask_nz].sum()
         else:
             if isinstance(data, skt.dtensor):
-                l = -self.lambda0_ija.sum() - eta * data_T.sum()
+                l = -self.lambda0_ija.sum() - self.eta * data_T.sum()
             elif isinstance(data, skt.sptensor):
-                l = -self.lambda0_ija.sum() - eta * data_T.vals.sum()
+                l = -self.lambda0_ija.sum() - self.eta * data_T.vals.sum()
         logM = np.log(self.M_nz)
         if isinstance(data, skt.dtensor):
             Alog = data[data.nonzero()] * logM
@@ -1034,30 +1024,30 @@ def get_item_array_from_subs(A, ref_subs):
     return np.array([A[a, i, j] for a, i, j in zip(*ref_subs)])
 
 
-def preprocess(X):
+def preprocess(A):
     """
         Pre-process input data tensor.
         If the input is sparse, returns an int sptensor. Otherwise, returns an int dtensor.
 
         Parameters
         ----------
-        X : ndarray
+        A : ndarray
             Input data (tensor).
 
         Returns
         -------
-        X : sptensor/dtensor
+        A : sptensor/dtensor
             Pre-processed data. If the input is sparse, returns an int sptensor. Otherwise, returns an int dtensor.
     """
 
-    if not X.dtype == np.dtype(int).type:
-        X = X.astype(int)
-    if isinstance(X, np.ndarray) and is_sparse(X):
-        X = sptensor_from_dense_array(X)
+    if not A.dtype == np.dtype(int).type:
+        A = A.astype(int)
+    if np.logical_and(isinstance(A, np.ndarray), is_sparse(A)):
+        A = sptensor_from_dense_array(A)
     else:
-        X = skt.dtensor(X)
+        A = skt.dtensor(A)
 
-    return X
+    return A
 
 
 def is_sparse(X):
