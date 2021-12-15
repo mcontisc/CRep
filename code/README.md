@@ -3,9 +3,9 @@ Copyright (c) 2020 [Hadiseh Safdari](https://github.com/hds-safdari), [Martina C
 
 Implements the algorithm described in:
 
-[1] Safdari H., Contisciani M. & De Bacco C. (2020). *A generative model for reciprocity and community detection in networks*, arXiv:2012.08215. 
+[1] Safdari H., Contisciani M. & De Bacco C. (2021). *Generative model for reciprocity and community detection in networks*, Phys. Rev. Research 3, 023209.  
 
-If you use this code please cite this [article](https://arxiv.org/abs/2012.08215) (_preprint_).  
+If you use this code please cite this [article](https://journals.aps.org/prresearch/abstract/10.1103/PhysRevResearch.3.023209) (_Published version, open access_).  
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -15,7 +15,7 @@ THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 ## Files
-- `main.py` : General version of the algorithm. It performing the inference in the given single-layer directed network. It infer latent variables as community memberships to nodes and a reciprocity parameter to the whole network.
+- `main.py` : General version of the algorithm. It performs the inference in the given single-layer directed network. It infers latent variables as community memberships to nodes and a reciprocity parameter to the whole network.
 - `CRep.py` : Class definition of CRep, the algorithm to perform inference in networks with reciprocity. The latent variables are related to community memberships and reciprocity value. This code is optimized to use sparse matrices.
 - `generate_data.py` : Code for generating the benchmark synthetic data with an intrinsic community structure and a given reciprocity value. 
 - `generative_model_reciprocity.py` : Class definition of the reciprocity generative model with the member functions required. It builds a directed, possibly weighted, network. It contains functions to generate networks with an intrinsic community structure and a given reciprocity value, with reciprocity-only or without reciprocity. 

@@ -762,7 +762,7 @@ class CRep:
             it : int
                  Number of iteration.
             loglik : float
-                     Log-likelihood value.
+                     Pseudo log-likelihood value.
             coincide : int
                        Number of time the update of the pseudo log-likelihood respects the tolerance.
             convergence : bool
