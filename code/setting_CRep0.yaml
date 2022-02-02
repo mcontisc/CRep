@@ -16,6 +16,4 @@ assortative: True
 eta0: 0
 fix_eta: True
 constrained: True
-file_u: "../data/input/file_u.csv"
-file_v: "../data/input/file_v.csv"
-file_w: "../data/input/file_w.csv"
+files: '../data/input/synthetic/theta.npz'
