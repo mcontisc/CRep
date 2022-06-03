@@ -1,4 +1,4 @@
-# CRep reciprocity and community detection in networks
+# CRep: reciprocity and community detection in networks
 Python implementation of CRep algorithm described in:
 
 - [1] Safdari H., Contisciani M. & De Bacco C. (2021). *Generative model for reciprocity and community detection in networks*, Phys. Rev. Research 3, 023209.  
