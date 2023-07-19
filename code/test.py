@@ -56,6 +56,8 @@ class Test(unittest.TestCase):
         theta = np.load(self.model.out_folder+'theta'+self.model.end_file+'.npz')
         thetaGT = np.load(self.model.out_folder+'theta_'+self.algorithm+'.npz')
 
+        print(np.where(thetaGT['u'] != theta['u']))
+
         self.assertTrue(np.array_equal(self.model.u_f, theta['u']))
         self.assertTrue(np.array_equal(self.model.v_f, theta['v']))
         self.assertTrue(np.array_equal(self.model.w_f, theta['w']))
