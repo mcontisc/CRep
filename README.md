@@ -23,8 +23,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - `data/output` : Contains some results to test the code.
 
 ## Requirements
-The project has been developed using Python 3.7 with the packages contained in *requirements.txt*. We suggest to create a conda environment with
-`conda create --name CRep python=3.7.9 --no-default-packages`, activate it with `conda activate CRep`, and install all the dependencies by running (inside `CRep` directory):
+The project has been developed using Python 3.9 with the packages contained in *requirements.txt*. We suggest to create a virtual environment with
+`python3.9 -m venv --copies CRep`, activate it with `source CRep/bin/activate`, and install all the dependencies by running (inside `CRep` directory):
 
 `pip install -r requirements.txt`
 
